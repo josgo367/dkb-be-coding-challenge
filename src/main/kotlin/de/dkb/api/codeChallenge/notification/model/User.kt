@@ -18,6 +18,17 @@ data class User(
     @Convert(converter = NotificationTypeSetConverter::class)
     var notifications: MutableSet<NotificationType> = mutableSetOf(),
 ) {
+    @Transient
+    var category: MutableSet<String> = mutableSetOf()
+        get() = calculateCategory()
+        private set
+
+    private fun calculateCategory(): MutableSet<String> {
+        return notifications
+            .mapNotNull { NotificationCategory.fromNotificationType(it) }
+            .mapTo(mutableSetOf()) { it.name }
+    }
+
     // Default constructor for Hibernate
     constructor() : this(UUID.randomUUID(), mutableSetOf())
 }

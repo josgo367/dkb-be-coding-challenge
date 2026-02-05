@@ -10,7 +10,20 @@ enum class NotificationType {
     type3,
     type4,
     type5,
+    type6,
 }
+
+enum class NotificationCategory(val notifications: List<NotificationType>) {
+    A(listOf(NotificationType.type1, NotificationType.type2, NotificationType.type3,NotificationType.type6)),
+    B(listOf(NotificationType.type4, NotificationType.type5));
+
+    companion object {
+        fun fromNotificationType(type: NotificationType): NotificationCategory? {
+            return NotificationCategory.entries.firstOrNull { type in it.notifications }
+        }
+    }
+}
+
 
 @Converter
 class NotificationTypeSetConverter : AttributeConverter<MutableSet<NotificationType>, String> {
