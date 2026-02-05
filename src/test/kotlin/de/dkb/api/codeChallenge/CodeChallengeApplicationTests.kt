@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.testcontainers.junit.jupiter.Testcontainers
+import java.util.*
 
 @Testcontainers
 @SpringBootTest
@@ -23,6 +24,18 @@ class CodeChallengeApplicationTests {
 	lateinit var notificationService: NotificationService
 
 	@Test
+	fun newUserWithNotificationType6GetsNotificationType6(){
+		val newUser = User(UUID.randomUUID(),mutableSetOf(NotificationType.type6))
+		userRepository.save(newUser)
+		val notificationDto = NotificationDto(
+			userId = newUser.id,
+			notificationType = NotificationType.type6,
+			message = "Send test notification"
+		)
+		assertTrue(notificationService.sendNotification(notificationDto))
+	}
+
+	@Test
 	fun userSubscribedClassAGetsNewNotificationType6() {
 		val userClassA = user(NotificationType.type1,NotificationType.type4,NotificationType.type5)
 
@@ -32,10 +45,7 @@ class CodeChallengeApplicationTests {
 				notificationType = NotificationType.type1,
 				message = "Send test notification"
 			)
-
-			val canReceive = notificationService.sendNotification(notificationDto)
-			assertTrue(canReceive)
-
+			assertTrue(notificationService.sendNotification(notificationDto))
 		}
 	}
 
@@ -49,9 +59,7 @@ class CodeChallengeApplicationTests {
 				notificationType = NotificationType.type5,
 				message = "Send test notification"
 			)
-
-			val canReceive = notificationService.sendNotification(notificationDto)
-			assertFalse(canReceive)
+			assertFalse(notificationService.sendNotification(notificationDto))
 		}
 	}
 
@@ -65,9 +73,7 @@ class CodeChallengeApplicationTests {
 				notificationType = NotificationType.type6,
 				message = "Send test notification"
 			)
-
-			val canReceive = notificationService.sendNotification(notificationDto)
-			assertFalse(canReceive)
+			assertFalse(notificationService.sendNotification(notificationDto))
 		}
 	}
 
