@@ -27,6 +27,9 @@ class CodeChallengeApplicationTests {
 	fun newUserWithNotificationType6GetsNotificationType6(){
 		val newUser = User(UUID.randomUUID(),mutableSetOf(NotificationType.type6))
 		userRepository.save(newUser)
+
+		//Check a new user has been created successfully
+		assertTrue(userRepository.existsById(newUser.id))
 		val notificationDto = NotificationDto(
 			userId = newUser.id,
 			notificationType = NotificationType.type6,
